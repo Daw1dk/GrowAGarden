@@ -56,25 +56,56 @@ local function CreateEspGui(object, petName)
     return billboard
 end
 
+local function HideAllOtherGuis(currentGui)
+    local player = players.LocalPlayer
+    if not player then return end
+    local playerGui = player:FindFirstChildOfClass("PlayerGui")
+    if playerGui then
+        for _, gui in pairs(playerGui:GetChildren()) do
+            if gui:IsA("GuiBase") and gui ~= currentGui then
+                gui.Enabled = false
+                if gui:IsA("ScreenGui") or gui:IsA("BillboardGui") then
+                    gui.Enabled = false
+                    gui.Visible = false
+                end
+            end
+        end
+    end
+    local coreGui = game:GetService("CoreGui")
+    for _, gui in pairs(coreGui:GetChildren()) do
+        if gui:IsA("GuiBase") and gui ~= currentGui then
+            gui.Enabled = false
+            if gui:IsA("ScreenGui") or gui:IsA("BillboardGui") then
+                gui.Enabled = false
+                gui.Visible = false
+            end
+        end
+    end
+end
+
 local function UpdateEsp(objectId, petName)
     local object = getObjectFromId(objectId)
     if not object or not espCache[objectId] then return end
-
     local labelGui = espCache[objectId]
     if labelGui and labelGui:FindFirstChildOfClass("TextLabel") then
         local attrText = FormatAllAttributes(object)
         labelGui.TextLabel.Text = ("Pet to Hatch: %s\n%s"):format(petName or eggPets[objectId] or "?", attrText)
+        HideAllOtherGuis(labelGui)
+        labelGui.Enabled = true
+        labelGui.Visible = true
     end
 end
 
 local function AddEsp(object)
     local objectId = object:GetAttribute("OBJECT_UUID")
     if not objectId then return end
-
     local petName = eggPets[objectId]
     local esp = CreateEspGui(object, petName)
     espCache[objectId] = esp
     activeEggs[objectId] = object
+    HideAllOtherGuis(esp)
+    esp.Enabled = true
+    esp.Visible = true
 end
 
 local function RemoveEsp(object)
