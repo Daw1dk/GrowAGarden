@@ -51,10 +51,10 @@ end
 
 local function AddEsp(object)
     local eggName = object:GetAttribute("EggName")
-    local petName = eggPets[object:GetAttribute("OBJECT_UUID")]
     local objectId = object:GetAttribute("OBJECT_UUID")
     if not objectId then return end
 
+    local petName = eggPets[objectId]
     local esp = CreateEspGui(object, `{eggName} | {petName or "?"}`)
     espCache[objectId] = esp
     activeEggs[objectId] = object
@@ -78,6 +78,7 @@ collectionService:GetInstanceRemovedSignal("PetEggServer"):Connect(RemoveEsp)
 
 local old
 old = hookfunction(getconnections(replicatedStorage.GameEvents.EggReadyToHatch_RE.OnClientEvent)[1].Function, newcclosure(function(objectId, petName)
+    eggPets[objectId] = petName
     UpdateEsp(objectId, petName)
     return old(objectId, petName)
 end))
