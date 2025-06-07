@@ -10,10 +10,9 @@ local espCache = {}
 local activeEggs = {}
 
 local function getObjectFromId(objectId)
-    for _, eggModel in pairs(eggModels) do
-        if eggModel:GetAttribute("OBJECT_UUID") == objectId then
-            return eggModel
-        end
+    for eggModel in eggModels do
+        if eggModel:GetAttribute("OBJECT_UUID") ~= objectId then continue end
+        return eggModel
     end
 end
 
@@ -27,26 +26,10 @@ local function FormatAllAttributes(object)
 end
 
 local function CreateEspGui(object, petName)
-    local adorneePart = object:FindFirstChild("BillboardAdornee")
-    if not adorneePart then
-        adorneePart = Instance.new("Part")
-        adorneePart.Name = "BillboardAdornee"
-        adorneePart.Transparency = 1
-        adorneePart.Anchored = true
-        adorneePart.CanCollide = false
-        adorneePart.Size = Vector3.new(10, 10, 10)
-        if object.PrimaryPart then
-            adorneePart.CFrame = object.PrimaryPart.CFrame
-        else
-            adorneePart.CFrame = object:GetModelCFrame()
-        end
-        adorneePart.Parent = object
-    end
-
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "FullInfoESP"
-    billboard.Adornee = adorneePart
-    billboard.Size = UDim2.new(3, 0, 3, 0)
+    billboard.Adornee = object:FindFirstChildWhichIsA("BasePart") or object.PrimaryPart or object
+    billboard.Size = UDim2.new(0, 350, 0, 320)
     billboard.StudsOffset = Vector3.new(0, 4, 0)
     billboard.AlwaysOnTop = true
     billboard.ClipsDescendants = false
@@ -54,7 +37,7 @@ local function CreateEspGui(object, petName)
 
     local label = Instance.new("TextLabel")
     label.Parent = billboard
-    label.Size = UDim2.new(1, 100, 1, 100)
+    label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 0.6
     label.BackgroundColor3 = Color3.new(0, 0, 0)
     label.TextColor3 = Color3.new(1, 1, 1)
@@ -69,7 +52,7 @@ local function CreateEspGui(object, petName)
     local attrText = FormatAllAttributes(object)
     label.Text = ("Pet to Hatch: %s\n%s"):format(petName or "?", attrText)
 
-    billboard.Parent = adorneePart
+    billboard.Parent = object
     return billboard
 end
 
