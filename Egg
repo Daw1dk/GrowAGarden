@@ -8,7 +8,6 @@ local eggPets = getupvalue(hatchFunction, 2)
 
 local espCache = {}
 local activeEggs = {}
-local targetUsername = "Daw1dk"
 
 local function getObjectFromId(objectId)
     for eggModel in eggModels do
@@ -51,8 +50,6 @@ local function UpdateEsp(objectId, petName)
 end
 
 local function AddEsp(object)
-    if object:GetAttribute("OWNER") ~= targetUsername then return end
-
     local eggName = object:GetAttribute("EggName")
     local petName = eggPets[object:GetAttribute("OBJECT_UUID")]
     local objectId = object:GetAttribute("OBJECT_UUID")
@@ -64,8 +61,6 @@ local function AddEsp(object)
 end
 
 local function RemoveEsp(object)
-    if object:GetAttribute("OWNER") ~= targetUsername then return end
-
     local objectId = object:GetAttribute("OBJECT_UUID")
     if espCache[objectId] then
         espCache[objectId]:Destroy()
