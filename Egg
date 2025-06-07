@@ -34,7 +34,7 @@ local function CreateEspGui(object, petName)
         adorneePart.Transparency = 1
         adorneePart.Anchored = true
         adorneePart.CanCollide = false
-        adorneePart.Size = Vector3.new(3, 3, 3)
+        adorneePart.Size = Vector3.new(10, 10, 10)
         if object.PrimaryPart then
             adorneePart.CFrame = object.PrimaryPart.CFrame
         else
