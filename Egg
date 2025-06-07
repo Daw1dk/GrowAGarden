@@ -16,23 +16,41 @@ local function getObjectFromId(objectId)
     end
 end
 
-local function CreateEspGui(object, text)
+local function FormatAllAttributes(object)
+    local attrs = object:GetAttributes()
+    local parts = {}
+    for key, val in pairs(attrs) do
+        table.insert(parts, key .. ": " .. tostring(val))
+    end
+    return table.concat(parts, "\n")
+end
+
+local function CreateEspGui(object, petName)
     local billboard = Instance.new("BillboardGui")
-    billboard.Name = "PetEggESP"
+    billboard.Name = "FullInfoESP"
     billboard.Adornee = object:FindFirstChildWhichIsA("BasePart") or object.PrimaryPart or object
-    billboard.Size = UDim2.new(0, 200, 0, 50)
-    billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+    billboard.Size = UDim2.new(0.2, 0, 0.2, 0)
+    billboard.StudsOffset = Vector3.new(0, 4, 0)
     billboard.AlwaysOnTop = true
+    billboard.ClipsDescendants = false
+    billboard.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
     local label = Instance.new("TextLabel")
     label.Parent = billboard
     label.Size = UDim2.new(1, 0, 1, 0)
-    label.BackgroundTransparency = 1
-    label.Text = text
+    label.BackgroundTransparency = 0.6
+    label.BackgroundColor3 = Color3.new(0, 0, 0)
     label.TextColor3 = Color3.new(1, 1, 1)
     label.TextStrokeTransparency = 0
-    label.TextScaled = true
-    label.Font = Enum.Font.SourceSansBold
+    label.TextWrapped = true
+    label.Font = Enum.Font.Code
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextYAlignment = Enum.TextYAlignment.Top
+    label.RichText = false
+
+    local attrText = FormatAllAttributes(object)
+    label.Text = ("Pet to Hatch: %s\n%s"):format(petName or "?", attrText)
 
     billboard.Parent = object
     return billboard
@@ -42,20 +60,19 @@ local function UpdateEsp(objectId, petName)
     local object = getObjectFromId(objectId)
     if not object or not espCache[objectId] then return end
 
-    local eggName = object:GetAttribute("EggName")
     local labelGui = espCache[objectId]
     if labelGui and labelGui:FindFirstChildOfClass("TextLabel") then
-        labelGui.TextLabel.Text = `{eggName} | {petName}`
+        local attrText = FormatAllAttributes(object)
+        labelGui.TextLabel.Text = ("Pet to Hatch: %s\n%s"):format(petName or eggPets[objectId] or "?", attrText)
     end
 end
 
 local function AddEsp(object)
-    local eggName = object:GetAttribute("EggName")
     local objectId = object:GetAttribute("OBJECT_UUID")
     if not objectId then return end
 
     local petName = eggPets[objectId]
-    local esp = CreateEspGui(object, `{eggName} | {petName or "?"}`)
+    local esp = CreateEspGui(object, petName)
     espCache[objectId] = esp
     activeEggs[objectId] = object
 end
