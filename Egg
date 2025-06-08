@@ -29,7 +29,7 @@ local function CreateEspGui(object, petName)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "FullInfoESP"
     billboard.Adornee = object:FindFirstChildWhichIsA("BasePart") or object.PrimaryPart or object
-    billboard.Size = UDim2.new(0, 650, 0, 620)
+    billboard.Size = UDim2.new(0, 350, 0, 320)
     billboard.StudsOffset = Vector3.new(0, 4, 0)
     billboard.AlwaysOnTop = true
     billboard.ClipsDescendants = false
