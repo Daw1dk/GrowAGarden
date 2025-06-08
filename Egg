@@ -31,7 +31,7 @@ local function CreateEspGui(object, petName)
     billboard.Adornee = object:FindFirstChildWhichIsA("BasePart") or object.PrimaryPart or object
     billboard.Size = UDim2.new(0, 350, 0, 320)
     billboard.StudsOffset = Vector3.new(0, 4, 0)
-    billboard.AlwaysOnTop = true
+    billboard.AlwaysOnTop = false
     billboard.ClipsDescendants = false
     billboard.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
