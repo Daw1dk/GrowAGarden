@@ -37,7 +37,7 @@ local function CreateEspGui(object, petName)
 
     local label = Instance.new("TextLabel")
     label.Parent = billboard
-    label.Size = UDim2.new(1, 0, 1, 0)
+    label.Size = UDim2.new(2, 0, 2, 0)
     label.BackgroundTransparency = 0.6
     label.BackgroundColor3 = Color3.new(0, 0, 0)
     label.TextColor3 = Color3.new(1, 1, 1)
